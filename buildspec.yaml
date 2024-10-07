@@ -4,6 +4,8 @@ phases:
     runtime-versions:
       docker: 18
     commands:
+      - echo Installing curl...
+      - yum install -y curl || apt-get update && apt-get install -y curl  # RHEL 계열과 Debian 계열 모두 지원
       - echo Install Kubectl
       - echo ---------------------------------
       - curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.19.6/2021-01-05/bin/linux/amd64/kubectl
@@ -15,7 +17,7 @@ phases:
       - kubectl get po -n kube-system
       - echo ---------------------------------
       - echo Install eksctl
-      - echo ---------------------------------
+      - echo ---------------------------------`
       - curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
       - sudo mv -v /tmp/eksctl /usr/local/bin
       - eksctl version
@@ -43,25 +45,25 @@ phases:
       - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
       - echo ---------------------------------
-  post_build:
-    commands:
-      - echo Deploy Application
-      - echo ---------------------------------
-      - echo Checking if EKS cluster exists...
-      - if ! eksctl get cluster --name eks-demo; then
-        echo "Cluster not found. Creating EKS cluster...";
-        eksctl create cluster -f eks-demo-cluster.yaml;
-        else
-        echo "Cluster exists. Proceeding with deployment...";
-        fi
-      - AWS_ECR_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
-      - DATE=`date`
-      - echo Build completed on $DATE
-      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' ./k8s/deployment.yaml
-      - sed -i.bak 's#DATE_STRING#'"$DATE"'#' ./k8s/deployment.yaml
-      - cat ./k8s/deployment.yaml
-      - export KUBECONFIG=$KUBECONFIG:~/.kube/config
-      - kubectl apply -f ./k8s/deployment.yaml
-      - kubectl apply -f ./k8s/service.yaml
-      - kubectl apply -f ./k8s/ingress.yaml  # Ingress 적용
-      - echo ---------------------------------
+#  post_build:
+#    commands:
+#      - echo Deploy Application
+#      - echo ---------------------------------
+#      - echo Checking if EKS cluster exists...
+#      - if ! eksctl get cluster --name eks-demo; then
+#        echo "Cluster not found. Creating EKS cluster...";
+#        eksctl create cluster -f eks-demo-cluster.yaml;
+#        else
+#        echo "Cluster exists. Proceeding with deployment...";
+#        fi
+#      - AWS_ECR_URI=$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+#      - DATE=`date`
+#      - echo Build completed on $DATE
+#      - sed -i.bak 's#AWS_ECR_URI#'"$AWS_ECR_URI"'#' ./k8s/deployment.yaml
+#      - sed -i.bak 's#DATE_STRING#'"$DATE"'#' ./k8s/deployment.yaml
+#      - cat ./k8s/deployment.yaml
+#      - export KUBECONFIG=$KUBECONFIG:~/.kube/config
+#      - kubectl apply -f ./k8s/deployment.yaml
+#      - kubectl apply -f ./k8s/service.yaml
+#      - kubectl apply -f ./k8s/ingress.yaml  # Ingress 적용
+#      - echo ---------------------------------
