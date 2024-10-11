@@ -75,7 +75,7 @@ jobs:
           repository: HowAboutThere/HowAboutThere-Gitops
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
-          path: evironment/k8s-manifest-repo
+          path: environment/k8s-manifest-repo
 
       - name: Update Kubernetes resources
         run: |
