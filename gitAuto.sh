@@ -13,7 +13,7 @@ git add .
 git commit -m "githubaction test${COUNT}"
 
 # 2. 최신 원격 브랜치 가져오기
-git fetch origin
+git pull origin
 
 # 3. 로컬 브랜치와 원격 브랜치 병합
 git merge origin/main  # 원격의 main 브랜치와 병합
