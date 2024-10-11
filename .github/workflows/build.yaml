@@ -72,7 +72,7 @@ jobs:
       - name: Checkout kustomize repository
         uses: actions/checkout@v2
         with:
-          repository: HowAboutThere/k8s-manifest-repo
+          repository: HowAboutThere/HowAboutThere-Gitops
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
           path: k8s-manifest-repo
