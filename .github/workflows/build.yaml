@@ -72,10 +72,17 @@ jobs:
       - name: Checkout kustomize repository
         uses: actions/checkout@v2
         with:
-          repository: HowAboutThere/HowAboutThere-Gitops/environment
+          repository: HowAboutThere/HowAboutThere-Gitops
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
           path: k8s-manifest-repo
+
+      - name: Navigate to overlays directory
+        run: |
+          pwd
+          ls -R
+          cd $(pwd)/k8s-manifest-repo/overlays/
+          pwd
 
       - name: Update Kubernetes resources
         run: |
