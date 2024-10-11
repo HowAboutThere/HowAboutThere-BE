@@ -72,10 +72,10 @@ jobs:
       - name: Checkout kustomize repository
         uses: actions/checkout@v2
         with:
-          repository: HowAboutThere/HowAboutThere-Gitops
+          repository: HowAboutThere/HowAboutThere-Gitops/environment
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
-          path: environment/k8s-manifest-repo
+          path: k8s-manifest-repo
 
       - name: Update Kubernetes resources
         run: |
@@ -83,7 +83,7 @@ jobs:
           echo ${{ steps.image-info.outputs.ecr_repository }}
           echo ${{ steps.image-info.outputs.image_tag }}
 
-          cd evironment/k8s-manifest-repo/overlays/
+          cd k8s-manifest-repo/overlays/
           kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
           cat kustomization.yaml
 
