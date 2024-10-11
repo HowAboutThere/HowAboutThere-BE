@@ -11,8 +11,8 @@ on:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true && github.repository == 'HowAboutThere/HowAboutThere-BE'
-#    if: github.repository == 'HowAboutThere/HowAboutThere-BE'
+#    if: github.event.pull_request.merged == true && github.repository == 'HowAboutThere/HowAboutThere-BE'
+    if: github.repository == 'HowAboutThere/HowAboutThere-BE'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -43,8 +43,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
+
       - name: Set AWS_ACCOUNT_ID
-        run: echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}" >> $GITHUB_ENV
+        run: echo "AWS_ACCOUNT_ID=${{ secrets.AWS_ACCOUNT_ID }}"
 
       - name: Login to Amazon ECR
         id: login-ecr
