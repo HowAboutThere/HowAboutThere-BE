@@ -11,8 +11,8 @@ on:
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true && github.repository == 'HowAboutThere/HowAboutThere-BE'
-#    if: github.repository == 'HowAboutThere/HowAboutThere-BE'
+#    if: github.event.pull_request.merged == true && github.repository == 'HowAboutThere/HowAboutThere-BE'
+    if: github.repository == 'HowAboutThere/HowAboutThere-BE'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
