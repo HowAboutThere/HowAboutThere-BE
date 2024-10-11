@@ -1,16 +1,18 @@
 
 name: Build Backend
 
+#on:
+#  pull_request:
+#    types: [closed]
+#    branches: [ main ]
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches: [ main ]
-permissions:
-  id-token: write
-  contents: read
+
 jobs:
   build:
-    if: github.event.pull_request.merged == true && github.repository == 'HowAboutThere/HowAboutThere-BE'
+#    if: github.event.pull_request.merged == true && github.repository == 'HowAboutThere/HowAboutThere-BE'
+    if: github.repository == 'HowAboutThere/HowAboutThere-BE'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
@@ -35,7 +37,7 @@ jobs:
         run: ./gradlew build
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
