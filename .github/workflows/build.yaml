@@ -77,20 +77,13 @@ jobs:
           token: ${{ secrets.ACTION_TOKEN }}
           path: k8s-manifest-repo
 
-      - name: Navigate to overlays directory
-        run: |
-          pwd
-          ls -R
-          cd $(pwd)/k8s-manifest-repo/overlays/
-          pwd
-
       - name: Update Kubernetes resources
         run: |
           echo ${{ steps.login-ecr.outputs.registry }}
           echo ${{ steps.image-info.outputs.ecr_repository }}
           echo ${{ steps.image-info.outputs.image_tag }}
           
-          cd k8s-manifest-repo/overlays/
+          cd k8s-manifest-repo/environment/k8s-manifest-repo/overlays/
           kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
           cat kustomization.yaml
 
