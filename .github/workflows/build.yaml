@@ -1,4 +1,3 @@
-
 name: Build Backend
 
 on:
@@ -42,7 +41,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Get image tag(verion)
+      - name: Get image tag(version)
         id: image
         run: |
           VERSION=$(echo ${{ github.sha }} | cut -c1-8)
@@ -61,11 +60,6 @@ jobs:
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
-      - name: Set environment variables
-        run: |
-          export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-          export AWS_REGION=ap-northeast-2
-
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v1
 
@@ -77,6 +71,13 @@ jobs:
           token: ${{ secrets.ACTION_TOKEN }}
           path: infra
 
+      # 변수 대체를 위한 envsubst 추가
+      - name: Substitute environment variables
+        run: |
+          export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+          export AWS_REGION=ap-northeast-2
+          envsubst < infra/environment/k8s-manifest-repo/overlays/dev/kustomization.yaml > infra/environment/k8s-manifest-repo/overlays/dev/kustomization.yaml
+
       - name: Update Kubernetes resources
         run: |
           echo ${{ steps.login-ecr.outputs.registry }}
@@ -84,9 +85,9 @@ jobs:
           echo ${{ steps.image-info.outputs.image_tag }}
           
           cd infra/environment/k8s-manifest-repo/overlays/dev
-          kustomize edit set image /${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
+          kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
           cat kustomization.yaml
-#
+
       - name: Commit files
         run: |
           cd infra
