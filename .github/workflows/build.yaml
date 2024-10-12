@@ -72,8 +72,11 @@ jobs:
           token: ${{ secrets.ACTION_TOKEN }}
           path: k8s-manifest-repo
 
+      - name: Debug directory structure
+        run: ls -R k8s-manifest-repo
+
       - name: Update Kubernetes resources
-        working-directory: k8s-manifest-repo/environment/overlays/dev
+        working-directory: environment/k8s-manifest-repo/overlays/dev
         run: |
           echo ${{ steps.login-ecr.outputs.registry }}
           echo ${{ steps.image-info.outputs.ecr_repository }}
