@@ -75,8 +75,6 @@ jobs:
         run: |
           export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           export AWS_REGION=ap-northeast-2
-          cp infra/environment/k8s-manifest-repo/overlays/dev/kustomization.yaml infra/environment/k8s-manifest-repo/overlays/dev/kustomization.yaml.bak
-          envsubst < infra/environment/k8s-manifest-repo/overlays/dev/kustomization.yaml.bak > infra/environment/k8s-manifest-repo/overlays/dev/kustomization.yaml
 
       - name: Update image tag using kustomize
         run: |
