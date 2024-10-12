@@ -93,6 +93,5 @@ jobs:
           cd infra
           git config --global user.email "jjang3a@gmail.com"
           git config --global user.name "HyunJunSon"
-          git add .          
           git commit -am "Update image tag"
           git push -u origin main
