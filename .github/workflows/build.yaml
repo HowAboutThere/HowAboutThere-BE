@@ -71,13 +71,10 @@ jobs:
           token: ${{ secrets.ACTION_TOKEN }}
           path: infra
 
-      - name: Substitute environment variables
+      - name: Update image tag using kustomize
         run: |
           export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           export AWS_REGION=ap-northeast-2
-
-      - name: Update image tag using kustomize
-        run: |
           echo ${{ steps.login-ecr.outputs.registry }}
           echo ${{ steps.image-info.outputs.ecr_repository }}
           echo ${{ steps.image-info.outputs.image_tag }}
