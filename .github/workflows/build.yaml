@@ -73,19 +73,20 @@ jobs:
           path: k8s-manifest-repo
 
       - name: Update Kubernetes resources
+        working-directory: k8s-manifest-repo/environment/overlays/dev
         run: |
           echo ${{ steps.login-ecr.outputs.registry }}
           echo ${{ steps.image-info.outputs.ecr_repository }}
           echo ${{ steps.image-info.outputs.image_tag }}
           
-          cd k8s-manifest-repo/environment/overlays/dev
           kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
           cat kustomization.yaml
 
       - name: Commit files
+        working-directory: k8s-manifest-repo/environment
         run: |
+          
           git config --global user.email "jjang3a@gmail.com"
           git config --global user.name "HyunJunSon"
-          cd ../..  
           git commit -am "Update image tag"
           git push -u origin main
