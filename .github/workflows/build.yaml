@@ -78,14 +78,14 @@ jobs:
           echo ${{ steps.image-info.outputs.ecr_repository }}
           echo ${{ steps.image-info.outputs.image_tag }}
           
-          cd k8s-manifest-repo/environment/k8s-manifest-repo/overlays/dev/
+          cd k8s-manifest-repo/environment/overlays/dev
           kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
           cat kustomization.yaml
 
       - name: Commit files
         run: |
-          cd ../..  
           git config --global user.email "jjang3a@gmail.com"
           git config --global user.name "HyunJunSon"
+          cd ../..  
           git commit -am "Update image tag"
           git push -u origin main
