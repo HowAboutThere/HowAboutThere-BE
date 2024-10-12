@@ -87,7 +87,7 @@ jobs:
 #
       - name: Commit files
         run: |
-          cd ../../../.
+          cd infra/environment/k8s-manifest-repo
           git config --global user.email "jjang3a@gmail.com"
           git config --global user.name "HyunJunSon"
           git commit -am "Update image tag"
