@@ -24,23 +24,23 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/trip")
 @RequiredArgsConstructor
 public class TripController {
 
     private final TripService tripService;
 
-    @GetMapping("trip/thema")
+    @GetMapping("/thema")
     public ResponseEntity<List<ThemaDto>> generateThema(@RequestBody TripInfoDto dto){
         return ResponseEntity.ok(tripService.generateThema(dto));
     }
 
-    @GetMapping("trip/spot")
+    @GetMapping("/spot")
     public ResponseEntity<List<TouristSpotDto>> generateSpot(@RequestBody ThemaDto dto){
         return ResponseEntity.ok(tripService.generateSpot(dto));
     }
 
-    @GetMapping("trip/itinerary")
+    @GetMapping("/itinerary")
     public ResponseEntity<List<ItineraryDto>> generateItinerary(@RequestBody ItineraryInfoDto dto){
         return ResponseEntity.ok(tripService.generateItinerary(dto));
     }
