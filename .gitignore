@@ -5,7 +5,6 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-src/main/resources/application.yaml
 ### STS ###
 .apt_generated
 .classpath
@@ -90,10 +89,10 @@ cmake-build-*/
 .idea/**/mongoSettings.xml
 
 # File-based project format
-*.iws
+/*.iws
 
 # IntelliJ
-out/
+out/*
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -180,7 +179,7 @@ hs_err_pid*
 replay_pid*
 
 ### Gradle ###
-.gradle
+.gradle/
 **/build/
 !src/**/build/
 
@@ -196,11 +195,6 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
-# Eclipse Gradle plugin generated files
-# Eclipse Core
-.project
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
 
 ### Gradle Patch ###
 # Java heap dump
