@@ -1,0 +1,23 @@
+#spring.application.name=HowAboutThere
+server:
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  port: 8080
+
+spring:
+  ai:
+    bedrock:
+      aws:
+        region: ap-northeast-2
+        timeout: 10m
+      anthropic3:
+        chat:
+          enabled: true
+          model: anthropic.claude-3-5-sonnet-20240620-v1:0
+          options:
+            max-tokens: 1000
+
+
