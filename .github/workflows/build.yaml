@@ -72,9 +72,6 @@ jobs:
           token: ${{ secrets.ACTION_TOKEN }}
           path: infra
 
-      - name: Debug directory structure
-        run: ls -R infra
-
       - name: Update Kubernetes resources
         run: |
           echo ${{ steps.login-ecr.outputs.registry }}
@@ -87,7 +84,7 @@ jobs:
 #
       - name: Commit files
         run: |
-          cd infra/environment/k8s-manifest-repo
+          cd infra
           git config --global user.email "jjang3a@gmail.com"
           git config --global user.name "HyunJunSon"
           git commit -am "Update image tag"
