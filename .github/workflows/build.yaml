@@ -65,22 +65,25 @@ jobs:
         uses: imranismail/setup-kustomize@v1
 
       - name: Checkout kustomize repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.2.1
         with:
           repository: HowAboutThere/HowAboutThere-Gitops
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
           path: k8s-manifest-repo
+          run:
+            echo "현재폴더:" | ls -al
 
-#      - name: Update Kubernetes resources
-#        working-directory: home/runner/work/HowAboutThere-Gitops/k8s-manifest-repo/environment/overlays/dev
-#        run: |
-#          echo ${{ steps.login-ecr.outputs.registry }}
-#          echo ${{ steps.image-info.outputs.ecr_repository }}
-#          echo ${{ steps.image-info.outputs.image_tag }}
-#
-#          kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
-#          cat kustomization.yaml
+      - name: Update Kubernetes resources
+        working-directory: home/runner/work/HowAboutThere-Gitops/k8s-manifest-repo/environment/overlays/dev
+        run: |
+          echo ${{ steps.login-ecr.outputs.registry }}
+          echo ${{ steps.image-info.outputs.ecr_repository }}
+          echo ${{ steps.image-info.outputs.image_tag }}
+          
+          echo "현재폴더:" | ls -al
+          kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
+          cat kustomization.yaml
 #
 #      - name: Commit files
 #        run: |
