@@ -1,6 +1,5 @@
 package com.kosa2team.howaboutthere.trip.dto;
 
-import java.time.LocalDate;
 /**
  *
  * @param startDate     // 여행 시작일
