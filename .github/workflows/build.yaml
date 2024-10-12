@@ -71,17 +71,14 @@ jobs:
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
           path: k8s-manifest-repo
-          run:
-            echo "현재폴더:" | ls -al
 
       - name: Update Kubernetes resources
-        working-directory: home/runner/work/HowAboutThere-Gitops/k8s-manifest-repo/environment/overlays/dev
+        working-directory: k8s-manifest-repo/environment/overlays/dev
         run: |
           echo ${{ steps.login-ecr.outputs.registry }}
           echo ${{ steps.image-info.outputs.ecr_repository }}
           echo ${{ steps.image-info.outputs.image_tag }}
           
-          echo "현재폴더:" | ls -al
           kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
           cat kustomization.yaml
 #
