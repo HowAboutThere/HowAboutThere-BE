@@ -70,24 +70,25 @@ jobs:
           repository: HowAboutThere/HowAboutThere-Gitops
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
-          path: k8s-manifest-repo
+          path: infra
 
       - name: Debug directory structure
-        run: ls -R k8s-manifest-repo
+        run: ls -R infra
 
       - name: Update Kubernetes resources
-        working-directory: environment/k8s-manifest-repo/overlays/dev
         run: |
           echo ${{ steps.login-ecr.outputs.registry }}
           echo ${{ steps.image-info.outputs.ecr_repository }}
           echo ${{ steps.image-info.outputs.image_tag }}
+          
+          cd infra/environment/k8s-manifest-repo/overlays/dev
           kustomize edit set image /${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
           cat kustomization.yaml
 #
       - name: Commit files
         run: |
+          cd ../../../.
           git config --global user.email "jjang3a@gmail.com"
           git config --global user.name "HyunJunSon"
           git commit -am "Update image tag"
           git push -u origin main
-        working-directory: /home/runner/work/HowAboutThere-Gitops/k8s-manifest-repo/environment
