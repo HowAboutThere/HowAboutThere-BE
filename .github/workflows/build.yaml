@@ -78,14 +78,18 @@ jobs:
           cp infra/environment/k8s-manifest-repo/overlays/dev/kustomization.yaml infra/environment/k8s-manifest-repo/overlays/dev/kustomization.yaml.bak
           envsubst < infra/environment/k8s-manifest-repo/overlays/dev/kustomization.yaml.bak > infra/environment/k8s-manifest-repo/overlays/dev/kustomization.yaml
 
-      - name: Update Kubernetes resources
+      - name: Update image tag using kustomize
         run: |
           echo ${{ steps.login-ecr.outputs.registry }}
           echo ${{ steps.image-info.outputs.ecr_repository }}
           echo ${{ steps.image-info.outputs.image_tag }}
           
           cd infra/environment/k8s-manifest-repo/overlays/dev
-          kustomize edit set image \${{ steps.login-ecr.outputs.registry}}/\${{ steps.image-info.outputs.ecr_repository }}=\${{ steps.login-ecr.outputs.registry}}/\${{ steps.image-info.outputs.ecr_repository }}:\${{ steps.image-info.outputs.image_tag }}
+          
+          # kustomize 명령어로 이미지 태그만 업데이트
+          kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
+          
+          # 결과 확인
           cat kustomization.yaml
 
       - name: Commit files
