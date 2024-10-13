@@ -79,7 +79,7 @@ jobs:
           echo "Image Tag: $image_tag"
           
           cd infra/environment/k8s-manifest-repo/overlays/dev
-          kustomize edit set image ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/how_about_there/server:$image_tag
+          kustomize edit set image ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/how_about_there/server=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/how_about_there/server:$image_tag
           cat kustomization.yaml
 
       - name: Commit files
