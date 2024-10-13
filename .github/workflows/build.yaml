@@ -75,12 +75,11 @@ jobs:
         run: |
           export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
           export AWS_REGION=ap-northeast-2
-          echo ${{ steps.login-ecr.outputs.registry }}
-          echo ${{ steps.image-info.outputs.ecr_repository }}
-          echo ${{ steps.image-info.outputs.image_tag }}
+          echo "ECR Repository: $ecr_repository"
+          echo "Image Tag: $image_tag"
           
           cd infra/environment/k8s-manifest-repo/overlays/dev
-          kustomize edit set image ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/how_about_there/server:${{ steps.image-info.outputs.image_tag }}
+          kustomize edit set image ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/how_about_there/server:$image_tag
           cat kustomization.yaml
 
       - name: Commit files
