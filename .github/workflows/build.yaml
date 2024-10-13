@@ -80,7 +80,6 @@ jobs:
           
           cd infra/environment/k8s-manifest-repo/overlays/dev
           kustomize edit set image ACCOUNT_ID.dkr.ecr.AWS_REGION.amazonaws.com/how_about_there/server=${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/how_about_there/server:$image_tag
-          cat kustomize.yaml
 
       - name: Commit files
         run: |
