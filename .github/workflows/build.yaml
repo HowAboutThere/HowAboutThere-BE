@@ -62,7 +62,7 @@ jobs:
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: '${{ steps.image-info.outputs.ECR_REGISTRY }}/${{ steps.image-info.outputs.ECR_REPOSITORY }}:${{ steps.image-info.outputsIMAGE_TAG }}'
+          image-ref: '${{ steps.image-info.outputs.ECR_REGISTRY }}/${{ steps.image-info.outputs.ECR_REPOSITORY }}:${{ steps.image-info.outputs.IMAGE_TAG }}'
           format: 'table'
           exit-code: '0'
           ignore-unfixed: true
@@ -71,8 +71,7 @@ jobs:
 
       - name: Push image to Amazon ECR
         run: |
-          docker push ${{ steps.image-info.outputs.ECR_REGISTRY }}/${{ step.image-info.outputs.ECR_REPOSITORY }}:${{ steps.image-info.outputs.IMAGE_TAG }}
-
+          docker push ${{ steps.image-info.outputs.ECR_REGISTRY }}/${{ steps.image-info.outputs.ECR_REPOSITORY }}:${{ steps.image-info.outputs.IMAGE_TAG }}
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v1
 
