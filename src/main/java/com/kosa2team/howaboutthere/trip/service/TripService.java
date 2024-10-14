@@ -34,7 +34,7 @@ public class TripService {
     @Value("classpath:/templates/touristSpotPrompt.st")
     private Resource spotPrompt;
 
-    @Value("classpath:/templates/itineraryPrompt.st")
+    @Value("classpath:/templates/ItineraryPrompt.st")
     private Resource itineraryPrompt;
 
     /**
@@ -90,17 +90,14 @@ public class TripService {
         Map<String, Object> map = new HashMap<>();
         map.put("startDate", dto.startDate());
         map.put("endDate", dto.endDate());
-        System.out.println(dto.touristspots());
         List<String> spots = new ArrayList<>();
         for (SpotInfoDto spotsList : dto.touristspots()) {
             spots.add(spotsList.spotname());
         }
         String spotList = String.join(",", spots);
-        System.out.println(spotList);
         map.put("touristspots", spotList);
         PromptTemplate pt = new PromptTemplate(itineraryPrompt);
         Prompt prompt = pt.create(map);
-        System.out.println(prompt);
         return chatClient.prompt(prompt).call().entity(new ParameterizedTypeReference<List<ItineraryDto>>() {});
     }
 
