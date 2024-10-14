@@ -59,6 +59,12 @@ jobs:
           echo "image_tag=$IMAGE_TAG" >> $GITHUB_ENV
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
 
+      - name: Debug ECR values
+        run: |
+          echo "ECR Registry: ${{ steps.image-info.outputs.ECR_REGISTRY }}"
+          echo "ECR Repository: ${{ steps.image-info.outputs.ECR_REPOSITORY }}"
+          echo "Image Tag: ${{ steps.image-info.outputs.IMAGE_TAG }}"
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         env:
