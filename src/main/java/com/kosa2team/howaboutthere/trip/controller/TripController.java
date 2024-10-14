@@ -5,7 +5,6 @@ import com.kosa2team.howaboutthere.trip.service.TripService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @RestController
@@ -25,10 +24,11 @@ public class TripController {
 
     public ResponseEntity<List<SpotInfoDto>> generateSpot(@RequestBody ThemeDto dto){
 
+
         return ResponseEntity.ok(tripService.generateSpot(dto));
     }
 
-    @GetMapping("/itinerary")
+    @PostMapping("/itinerary")
     public ResponseEntity<List<ItineraryDto>> generateItinerary(@RequestBody ItineraryInfoDto dto){
         return ResponseEntity.ok(tripService.generateItinerary(dto));
     }
