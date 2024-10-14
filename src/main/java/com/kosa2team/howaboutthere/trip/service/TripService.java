@@ -34,7 +34,7 @@ public class TripService {
     @Value("classpath:/templates/touristSpotPrompt.st")
     private Resource spotPrompt;
 
-    @Value("classpath:/templates/itineraryPrompt.st")
+    @Value("classpath:/templates/ItineraryPrompt.st")
     private Resource itineraryPrompt;
 
     /**
