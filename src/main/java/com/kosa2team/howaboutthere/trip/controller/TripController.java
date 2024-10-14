@@ -14,13 +14,17 @@ import java.util.List;
 public class TripController {
     private final TripService tripService;
 
+
     @GetMapping("/theme")
     public ResponseEntity<List<ThemeDto>> generateThema(@RequestBody TripInfoDto dto){
+
         return ResponseEntity.ok(tripService.generateThema(dto));
     }
 
     @GetMapping("/spot")
+
     public ResponseEntity<List<SpotInfoDto>> generateSpot(@RequestBody ThemeDto dto){
+
         return ResponseEntity.ok(tripService.generateSpot(dto));
     }
 
