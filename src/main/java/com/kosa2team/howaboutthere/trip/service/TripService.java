@@ -2,17 +2,20 @@ package com.kosa2team.howaboutthere.trip.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.maps.GeoApiContext;
+import com.google.maps.PlacesApi;
+import com.google.maps.errors.ApiException;
+import com.google.maps.model.PlacesSearchResult;
 import com.kosa2team.howaboutthere.trip.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.PromptTemplate;
+import org.springframework.ai.chat.prompt.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,9 +25,10 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TripService {
 
+    private final GeoApiContext geoApiContext;
     private final ChatClient chatClient;
 
-    @Value("classpath:/templates/themaPrompt.st")
+    @Value("classpath:/templates/themePrompt.st")
     private Resource themaPrompt;
 
     @Value("classpath:/templates/touristSpotPrompt.st")
@@ -38,7 +42,7 @@ public class TripService {
      * @param dto : TripInfoDto로 startDate, endDate, budget, isDomestic 받아옴
      * @return List<ThemaDto> : 생성된 thema 리스트 반환
      */
-    public List<ThemaDto> generateThema(TripInfoDto dto) {
+    public List<ThemeDto> generateThema(TripInfoDto dto) {
         // dto to map
         ObjectMapper object = new ObjectMapper();
         Map<String,Object> map = object.convertValue(dto,Map.class);
@@ -46,8 +50,7 @@ public class TripService {
         PromptTemplate pt = new PromptTemplate(themaPrompt);
         Prompt prompt = pt.create(map);
         //bedrock client 호출 후 ThemaDto에 넣어 리스트로 반환
-        List<ThemaDto> response= chatClient.prompt(prompt).call().entity(new ParameterizedTypeReference<List<ThemaDto>>() {});
-        return response;
+        return chatClient.prompt(prompt).call().entity(new ParameterizedTypeReference<List<ThemeDto>>() {});
     }
 
     /**
@@ -55,31 +58,52 @@ public class TripService {
      * @param dto : ThemaDto로 region, thema 받아옴
      * @return String : 생성된 tourist spot 반환
      */
-    public List<TouristSpotDto> generateSpot(ThemaDto dto) {
+    public List<SpotInfoDto> generateSpot(ThemeDto dto) {
 
         ObjectMapper object = new ObjectMapper();
         Map<String, Object> map = object.convertValue(dto,new TypeReference<>() {});
         PromptTemplate pt = new PromptTemplate(spotPrompt);
         Prompt prompt = pt.create(map);
         List<TouristSpotDto> response = chatClient.prompt(prompt).call().entity(new ParameterizedTypeReference<List<TouristSpotDto>>() {});
-        return response;
+        return verifyPlace(response);
 
+    }
+
+    public List<SpotInfoDto> verifyPlace(List<TouristSpotDto> touristspots) {
+        List<SpotInfoDto> spots = new ArrayList<>();
+        for (TouristSpotDto spotsList : touristspots) {
+            spotsList.spotname();
+            try {
+                PlacesSearchResult[] results = PlacesApi.textSearchQuery(geoApiContext, spotsList.spotname()).language("ko").await().results;
+                if (results.length > 0) {
+                    PlacesSearchResult placeDetails = results[0];
+                    spots.add(new SpotInfoDto(placeDetails.placeId,placeDetails.name,placeDetails.formattedAddress));
+                }
+            } catch (IOException | ApiException | InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return spots;
     }
 
     public List<ItineraryDto> generateItinerary(ItineraryInfoDto dto) {
         Map<String, Object> map = new HashMap<>();
         map.put("startDate", dto.startDate());
         map.put("endDate", dto.endDate());
-
-        List<String> touristspots = new ArrayList<>();
-        for (TouristSpotDto spotsList : dto.touristspots()) {
-            touristspots.add(spotsList.spotname());
+        System.out.println(dto.touristspots());
+        List<String> spots = new ArrayList<>();
+        for (SpotInfoDto spotsList : dto.touristspots()) {
+            spots.add(spotsList.spotname());
         }
-        map.put("touristspots", touristspots);
-
+        String spotList = String.join(",", spots);
+        System.out.println(spotList);
+        map.put("touristspots", spotList);
         PromptTemplate pt = new PromptTemplate(itineraryPrompt);
         Prompt prompt = pt.create(map);
-        List<ItineraryDto>response = chatClient.prompt(prompt).call().entity(new ParameterizedTypeReference<List<ItineraryDto>>() {});
-        return response;
+        System.out.println(prompt);
+        return chatClient.prompt(prompt).call().entity(new ParameterizedTypeReference<List<ItineraryDto>>() {});
     }
+
+
+
 }
