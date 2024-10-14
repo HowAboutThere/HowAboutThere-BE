@@ -14,18 +14,17 @@ public class TripController {
     private final TripService tripService;
 
 
-    @GetMapping("/theme")
+    @PostMapping("/theme")
     public ResponseEntity<List<ThemeDto>> generateThema(@RequestBody TripInfoDto dto){
         return ResponseEntity.ok(tripService.generateThema(dto));
     }
 
-    @GetMapping("/spot")
-
+    @PostMapping("/spot")
     public ResponseEntity<List<SpotInfoDto>> generateSpot(@RequestBody ThemeDto dto){
         return ResponseEntity.ok(tripService.generateSpot(dto));
     }
 
-    @GetMapping("/itinerary")
+    @PostMapping("/itinerary")
     public ResponseEntity<List<ItineraryDto>> generateItinerary(@RequestBody ItineraryInfoDto dto){
         return ResponseEntity.ok(tripService.generateItinerary(dto));
     }
