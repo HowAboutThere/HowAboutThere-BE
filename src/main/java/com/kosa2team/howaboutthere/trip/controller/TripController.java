@@ -16,19 +16,16 @@ public class TripController {
 
     @GetMapping("/theme")
     public ResponseEntity<List<ThemeDto>> generateThema(@RequestBody TripInfoDto dto){
-
         return ResponseEntity.ok(tripService.generateThema(dto));
     }
 
     @GetMapping("/spot")
 
     public ResponseEntity<List<SpotInfoDto>> generateSpot(@RequestBody ThemeDto dto){
-
-
         return ResponseEntity.ok(tripService.generateSpot(dto));
     }
 
-    @PostMapping("/itinerary")
+    @GetMapping("/itinerary")
     public ResponseEntity<List<ItineraryDto>> generateItinerary(@RequestBody ItineraryInfoDto dto){
         return ResponseEntity.ok(tripService.generateItinerary(dto));
     }
