@@ -1,5 +1,7 @@
 package com.kosa2team.howaboutthere.trip.config;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.maps.GeoApiContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,11 +10,13 @@ import software.amazon.awssdk.services.secretsmanager.SecretsManagerClient;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueRequest;
 import software.amazon.awssdk.services.secretsmanager.model.GetSecretValueResponse;
 
+import java.util.Map;
+
 @Configuration
 public class GoogleMapConfig {
 
+    public String apiKey=getSecret();
 
-    public String apiKey = getSecret();
 
 
     @Bean
@@ -25,7 +29,7 @@ public class GoogleMapConfig {
 
 
 
-    public String getSecret() {
+    public String getSecret(){
 
         String secretName = "prod/google/api";
         Region region = Region.of("ap-northeast-2");
@@ -42,7 +46,13 @@ public class GoogleMapConfig {
         GetSecretValueResponse getSecretValueResponse;
 
         getSecretValueResponse = client.getSecretValue(getSecretValueRequest);
-
-        return getSecretValueResponse.secretString();
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, String> secretMap;
+        try {
+            secretMap = objectMapper.readValue(getSecretValueResponse.secretString(), Map.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return secretMap.get("Google_API_KEY");
     }
 }
