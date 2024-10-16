@@ -13,6 +13,10 @@ import java.util.List;
 public class TripController {
     private final TripService tripService;
 
+    @GetMapping
+    public String health(){
+        return "OK";
+    }
 
     @PostMapping("trip/theme")
     public ResponseEntity<List<ThemeDto>> generateThema(@RequestBody TripInfoDto dto){
