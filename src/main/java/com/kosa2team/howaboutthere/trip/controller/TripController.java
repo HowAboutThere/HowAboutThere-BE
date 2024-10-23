@@ -8,28 +8,28 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class TripController {
     private final TripService tripService;
 
-    @GetMapping
+    @GetMapping()
     public String health(){
         return "OK";
     }
 
-    @PostMapping("trip/theme")
+    @PostMapping("/theme")
     public ResponseEntity<List<ThemeDto>> generateThema(@RequestBody TripInfoDto dto){
         return ResponseEntity.ok(tripService.generateThema(dto));
     }
 
-    @PostMapping("trip/spot")
+    @PostMapping("/spot")
     public ResponseEntity<List<SpotInfoDto>> generateSpot(@RequestBody ThemeDto dto){
         return ResponseEntity.ok(tripService.generateSpot(dto));
     }
 
-    @PostMapping("trip/itinerary")
+    @PostMapping("/itinerary")
     public ResponseEntity<List<ItineraryDto>> generateItinerary(@RequestBody ItineraryInfoDto dto){
         return ResponseEntity.ok(tripService.generateItinerary(dto));
     }
